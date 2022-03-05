@@ -46,6 +46,26 @@ public:
     };
 
 public:
+    struct GPIO {
+        bool P0 = false;
+        bool P1 = false;
+        bool P2 = false;
+        bool P3 = false;
+        bool P4 = false;
+        bool P5 = false;
+        bool P6 = false;
+        bool P7 = false;
+
+    public:
+        static GPIO from(unsigned short value);
+
+        static unsigned short toValue(GPIO gpio);
+
+    public:
+        unsigned short toValue();
+    };
+
+public:
     /**
      * 初始化程序
      * @since 1.0.0
@@ -58,7 +78,7 @@ public:
      * @since 1.0.0
      * @see Wire#endTransmission
      */
-    uint8_t read(JUMP jump);
+    GPIO read(JUMP jump);
 
     /**
      * 写入当前变量
@@ -66,7 +86,7 @@ public:
      * @since 1.0.0
      * @see Wire#endTransmission
      */
-    uint8_t write(JUMP jump);
+    uint8_t write(JUMP jump, GPIO gpio);
 
     /**
      * 写入当前变量
@@ -76,25 +96,6 @@ public:
      * @see Wire#endTransmission
      */
     uint8_t write(JUMP jump, unsigned short value);
-
-    /**
-     * 写入当前变量
-     * @param jump
-     * @param p0
-     * @param p1
-     * @param p2
-     * @param p3
-     * @param p4
-     * @param p5
-     * @param p6
-     * @param p7
-     * @since 1.0.0
-     * @see Wire#endTransmission
-     */
-    uint8_t write(JUMP jump, bool p0 = false, bool p1 = false, bool p2 = false, bool p3 = false, bool p4 = false, bool p5 = false, bool p6 = false, bool p7 = false);
-
-public:
-    bool P0, P1, P2, P3, P4, P5, P6, P7;
 
 };
 
