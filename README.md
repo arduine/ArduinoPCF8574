@@ -4,7 +4,7 @@
 
 一个Arduino的`PCF8574`的I/O拓展板库，目前测试支持下面几种板子。支持完全串联控制，也就是支持到64个IO接口。
 
-![board](images/images-01.png)
+![board](https://raw.githubusercontent.com/arduine/ArduinoPCF8574/main/images/images-01.png)
 
 > #### ⚠️ 注意：
 >
