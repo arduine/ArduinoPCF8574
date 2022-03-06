@@ -9,9 +9,6 @@
 
 class ArduinoPCF8574 {
 
-private:
-    ArduinoPCF8574();
-
 public:
     enum JUMP {
         // @formatter:off
@@ -71,7 +68,14 @@ public:
         unsigned short toValue();
 
         String toString() const;
+
+        bool operator[](unsigned short index) const;
+
+        GPIO set(unsigned short index, bool value);
     };
+
+public:
+    explicit ArduinoPCF8574(JUMP jump);
 
 public:
     /**
@@ -111,6 +115,15 @@ public:
      */
     static bool isInited();
 
+public:
+    GPIO read();
+
+    uint8_t write(GPIO gpio);
+
+    uint8_t write(unsigned short value);
+
+private:
+    JUMP mJump;
 };
 
 

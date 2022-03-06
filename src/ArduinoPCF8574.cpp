@@ -8,7 +8,8 @@
 
 static bool sArduinoPCF8574IsInited = false;
 
-ArduinoPCF8574::ArduinoPCF8574() = default;
+ArduinoPCF8574::ArduinoPCF8574(ArduinoPCF8574::JUMP jump) : mJump(jump) {
+}
 
 void ArduinoPCF8574::setup() {
     if (sArduinoPCF8574IsInited)
@@ -32,12 +33,24 @@ uint8_t ArduinoPCF8574::write(JUMP jump, GPIO gpio) {
 
 uint8_t ArduinoPCF8574::write(JUMP jump, unsigned short value) {
     Wire.beginTransmission(jump);
-    Wire.write(value);
+    Wire.write((uint8_t) value);
     return Wire.endTransmission();
 }
 
 bool ArduinoPCF8574::isInited() {
     return sArduinoPCF8574IsInited;
+}
+
+ArduinoPCF8574::GPIO ArduinoPCF8574::read() {
+    return ArduinoPCF8574::read(mJump);
+}
+
+uint8_t ArduinoPCF8574::write(ArduinoPCF8574::GPIO gpio) {
+    return ArduinoPCF8574::write(mJump, gpio);
+}
+
+uint8_t ArduinoPCF8574::write(unsigned short value) {
+    return ArduinoPCF8574::write(mJump, value);
 }
 
 ArduinoPCF8574::GPIO ArduinoPCF8574::GPIO::from(unsigned short value) {
@@ -79,4 +92,59 @@ String ArduinoPCF8574::GPIO::toString() const {
            "P5=" + this->P5 + ", " +
            "P6=" + this->P6 + ", " +
            "P7=" + this->P7;
+}
+
+bool ArduinoPCF8574::GPIO::operator[](unsigned short index) const {
+    switch (index) {
+        case 0:
+            return this->P0;
+        case 1:
+            return this->P1;
+        case 2:
+            return this->P2;
+        case 3:
+            return this->P3;
+        case 4:
+            return this->P4;
+        case 5:
+            return this->P5;
+        case 6:
+            return this->P6;
+        case 7:
+            return this->P7;
+        default:
+            return false;
+    }
+}
+
+ArduinoPCF8574::GPIO ArduinoPCF8574::GPIO::set(unsigned short index, bool value) {
+    switch (index) {
+        case 0:
+            this->P0 = value;
+            break;
+        case 1:
+            this->P1 = value;
+            break;
+        case 2:
+            this->P2 = value;
+            break;
+        case 3:
+            this->P3 = value;
+            break;
+        case 4:
+            this->P4 = value;
+            break;
+        case 5:
+            this->P5 = value;
+            break;
+        case 6:
+            this->P6 = value;
+            break;
+        case 7:
+            this->P7 = value;
+            break;
+        default:
+            break;
+    }
+    return *this;
 }
