@@ -8,8 +8,6 @@
 #include <Arduino.h>
 
 class ArduinoPCF8574 {
-public:
-    static ArduinoPCF8574 *getInstance();
 
 private:
     ArduinoPCF8574();
@@ -57,12 +55,22 @@ public:
         bool P7 = false;
 
     public:
+        /**
+         * 从数值中分析引脚状态
+         * @since 1.0.0
+         */
         static GPIO from(unsigned short value);
 
+        /**
+         * 将引脚状态转换成数值
+         * @since 1.0.0
+         */
         static unsigned short toValue(GPIO gpio);
 
     public:
         unsigned short toValue();
+
+        String toString() const;
     };
 
 public:
@@ -70,7 +78,7 @@ public:
      * 初始化程序
      * @since 1.0.0
      */
-    void setup();
+    static void setup();
 
     /**
      * 读取当前的状态，存放在变量中
@@ -78,7 +86,7 @@ public:
      * @since 1.0.0
      * @see Wire#endTransmission
      */
-    GPIO read(JUMP jump);
+    static GPIO read(JUMP jump);
 
     /**
      * 写入当前变量
@@ -86,7 +94,7 @@ public:
      * @since 1.0.0
      * @see Wire#endTransmission
      */
-    uint8_t write(JUMP jump, GPIO gpio);
+    static uint8_t write(JUMP jump, GPIO gpio);
 
     /**
      * 写入当前变量
@@ -95,7 +103,13 @@ public:
      * @since 1.0.0
      * @see Wire#endTransmission
      */
-    uint8_t write(JUMP jump, unsigned short value);
+    static uint8_t write(JUMP jump, unsigned short value);
+
+    /**
+     * 是否已经初始化
+     * @since 1.0.0
+     */
+    static bool isInited();
 
 };
 
