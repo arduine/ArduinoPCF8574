@@ -1,6 +1,6 @@
 {
     "name": "ArduinoPCF8574",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "keywords": ["arduino", "pcf8574", "gpio", "esp8266", "esp32"],
     "description": "Arduino的PCF8574拓展IO支持库，支持：Arduino,ESP8266,ESP32等等",
     "repository": {
