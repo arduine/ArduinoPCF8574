@@ -19,15 +19,15 @@ void ArduinoPCF8574::setup() {
     sArduinoPCF8574IsInited = true;
 }
 
-ArduinoPCF8574::GPIO ArduinoPCF8574::read(ArduinoPCF8574::JUMP jump) {
+ArduinoPCF8574::State ArduinoPCF8574::read(ArduinoPCF8574::JUMP jump) {
     Wire.beginTransmission(jump);
     Wire.requestFrom((uint8_t) jump, (uint8_t) 1);
     unsigned short value = Wire.read();
     Wire.endTransmission();
-    return GPIO::from(value);
+    return State::from(value);
 }
 
-uint8_t ArduinoPCF8574::write(JUMP jump, GPIO gpio) {
+uint8_t ArduinoPCF8574::write(JUMP jump, State gpio) {
     return write(jump, gpio.toValue());
 }
 
@@ -41,20 +41,20 @@ bool ArduinoPCF8574::isInited() {
     return sArduinoPCF8574IsInited;
 }
 
-ArduinoPCF8574::GPIO ArduinoPCF8574::read() {
+ArduinoPCF8574::State ArduinoPCF8574::read() {
     return ArduinoPCF8574::read(mJump);
 }
 
-uint8_t ArduinoPCF8574::write(ArduinoPCF8574::GPIO gpio) {
-    return ArduinoPCF8574::write(mJump, gpio);
+uint8_t ArduinoPCF8574::write(ArduinoPCF8574::State state) {
+    return ArduinoPCF8574::write(mJump, state);
 }
 
 uint8_t ArduinoPCF8574::write(unsigned short value) {
     return ArduinoPCF8574::write(mJump, value);
 }
 
-ArduinoPCF8574::GPIO ArduinoPCF8574::GPIO::from(unsigned short value) {
-    auto gpio = ArduinoPCF8574::GPIO();
+ArduinoPCF8574::State ArduinoPCF8574::State::from(unsigned short value) {
+    auto gpio = ArduinoPCF8574::State();
     gpio.P0 = (value & 0x01) == 1;
     gpio.P1 = ((value >> 1) & 0x01) == 1;
     gpio.P2 = ((value >> 2) & 0x01) == 1;
@@ -66,23 +66,23 @@ ArduinoPCF8574::GPIO ArduinoPCF8574::GPIO::from(unsigned short value) {
     return gpio;
 }
 
-unsigned short ArduinoPCF8574::GPIO::toValue(ArduinoPCF8574::GPIO gpio) {
-    unsigned short value = gpio.P7 ? 1 : 0;
-    value = (value << 1) + (gpio.P6 ? 1 : 0);
-    value = (value << 1) + (gpio.P5 ? 1 : 0);
-    value = (value << 1) + (gpio.P4 ? 1 : 0);
-    value = (value << 1) + (gpio.P3 ? 1 : 0);
-    value = (value << 1) + (gpio.P2 ? 1 : 0);
-    value = (value << 1) + (gpio.P1 ? 1 : 0);
-    value = (value << 1) + (gpio.P0 ? 1 : 0);
+unsigned short ArduinoPCF8574::State::toValue(ArduinoPCF8574::State state) {
+    unsigned short value = state.P7 ? 1 : 0;
+    value = (value << 1) + (state.P6 ? 1 : 0);
+    value = (value << 1) + (state.P5 ? 1 : 0);
+    value = (value << 1) + (state.P4 ? 1 : 0);
+    value = (value << 1) + (state.P3 ? 1 : 0);
+    value = (value << 1) + (state.P2 ? 1 : 0);
+    value = (value << 1) + (state.P1 ? 1 : 0);
+    value = (value << 1) + (state.P0 ? 1 : 0);
     return value;
 }
 
-unsigned short ArduinoPCF8574::GPIO::toValue() {
-    return ArduinoPCF8574::GPIO::toValue(*this);
+unsigned short ArduinoPCF8574::State::toValue() {
+    return ArduinoPCF8574::State::toValue(*this);
 }
 
-String ArduinoPCF8574::GPIO::toString() const {
+String ArduinoPCF8574::State::toString() const {
     return String() +
            "P0=" + this->P0 + ", " +
            "P1=" + this->P1 + ", " +
@@ -94,53 +94,53 @@ String ArduinoPCF8574::GPIO::toString() const {
            "P7=" + this->P7;
 }
 
-bool ArduinoPCF8574::GPIO::operator[](unsigned short index) const {
-    switch (index) {
-        case 0:
+bool ArduinoPCF8574::State::operator[](const PIN& pin) const {
+    switch (pin) {
+        case PIN::P0:
             return this->P0;
-        case 1:
+        case PIN::P1:
             return this->P1;
-        case 2:
+        case PIN::P2:
             return this->P2;
-        case 3:
+        case PIN::P3:
             return this->P3;
-        case 4:
+        case PIN::P4:
             return this->P4;
-        case 5:
+        case PIN::P5:
             return this->P5;
-        case 6:
+        case PIN::P6:
             return this->P6;
-        case 7:
+        case PIN::P7:
             return this->P7;
         default:
             return false;
     }
 }
 
-ArduinoPCF8574::GPIO ArduinoPCF8574::GPIO::set(unsigned short index, bool value) {
-    switch (index) {
-        case 0:
+ArduinoPCF8574::State ArduinoPCF8574::State::set(const PIN& pin, bool value) {
+    switch (pin) {
+        case PIN::P0:
             this->P0 = value;
             break;
-        case 1:
+        case PIN::P1:
             this->P1 = value;
             break;
-        case 2:
+        case PIN::P2:
             this->P2 = value;
             break;
-        case 3:
+        case PIN::P3:
             this->P3 = value;
             break;
-        case 4:
+        case PIN::P4:
             this->P4 = value;
             break;
-        case 5:
+        case PIN::P5:
             this->P5 = value;
             break;
-        case 6:
+        case PIN::P6:
             this->P6 = value;
             break;
-        case 7:
+        case PIN::P7:
             this->P7 = value;
             break;
         default:

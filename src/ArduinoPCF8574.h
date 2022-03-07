@@ -7,9 +7,18 @@
 
 #include <Arduino.h>
 
+/**
+ * 一个Arduino控制PCF8574芯片的库
+ * @author sollyu
+ * @see https://github.com/arduine/ArduinoPCF8574
+ */
 class ArduinoPCF8574 {
 
 public:
+    /**
+     * 跳线配置列表
+     * @since 1.0.0
+     */
     enum JUMP {
         // @formatter:off
         /**
@@ -40,8 +49,20 @@ public:
         // @formatter:on
     };
 
+    /**
+     * 接口定义
+     * @since 1.0.2
+     */
+    enum PIN {
+        P0 = 0, P1 = 1, P2 = 2, P3 = 3, P4 = 4, P5 = 5, P6 = 6, P7 = 7
+    };
+
 public:
-    struct GPIO {
+    /**
+     * 当前接口状态
+     * @since 1.0.0
+     */
+    struct State {
         bool P0 = false;
         bool P1 = false;
         bool P2 = false;
@@ -56,25 +77,40 @@ public:
          * 从数值中分析引脚状态
          * @since 1.0.0
          */
-        static GPIO from(unsigned short value);
+        static State from(unsigned short value);
 
         /**
          * 将引脚状态转换成数值
          * @since 1.0.0
          */
-        static unsigned short toValue(GPIO gpio);
+        static unsigned short toValue(State state);
 
     public:
         unsigned short toValue();
 
         String toString() const;
 
-        bool operator[](unsigned short index) const;
+        /**
+         * 使用数组的方式读取引脚的状态
+         * @param pin 引脚
+         * @since 1.0.2
+         */
+        bool operator[](const PIN &pin) const;
 
-        GPIO set(unsigned short index, bool value);
+        /**
+         * 设置引脚的状态
+         * @param pin   引脚接口
+         * @param value 状态
+         * @since 1.0.2
+         */
+        State set(const PIN &pin, bool value);
     };
 
 public:
+    /**
+     * @param jump 当前跳线位置
+     * @since 1.0.1
+     */
     explicit ArduinoPCF8574(JUMP jump);
 
 public:
@@ -90,7 +126,7 @@ public:
      * @since 1.0.0
      * @see Wire#endTransmission
      */
-    static GPIO read(JUMP jump);
+    static State read(JUMP jump);
 
     /**
      * 写入当前变量
@@ -98,7 +134,7 @@ public:
      * @since 1.0.0
      * @see Wire#endTransmission
      */
-    static uint8_t write(JUMP jump, GPIO gpio);
+    static uint8_t write(JUMP jump, State gpio);
 
     /**
      * 写入当前变量
@@ -116,10 +152,24 @@ public:
     static bool isInited();
 
 public:
-    GPIO read();
+    /**
+     * 读取状态
+     * @since 1.0.1
+     */
+    State read();
 
-    uint8_t write(GPIO gpio);
+    /**
+     * 设置接口状态
+     * @param state 接口状态
+     * @since 1.0.1
+     */
+    uint8_t write(State state);
 
+    /**
+     * 写入数据
+     * @param value 手动配置接口状态
+     * @since 1.0.1
+     */
     uint8_t write(unsigned short value);
 
 private:

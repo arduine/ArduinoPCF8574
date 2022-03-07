@@ -36,23 +36,33 @@ lib_deps =
 #include <ArduinoPCF8574.h>
 ```
 
-2. 初始化
+2. 编写代码
 
 ```c++
 void setup() {
     ArduinoPCF8574::setup(); // <-- 初始化
 }
 
-void onYouFunction() {
-    // 读取状态
-    auto gpio = ArduinoPCF8574::read(ArduinoPCF8574::J32);
+void onTest1() {
+    // 读取
+    auto state = ArduinoPCF8574::read(ArduinoPCF8574::J32);
     Serial.printf("JUMP 32 "
-                  "GPIO P0:%d, P1:%d, P2:%d,   P3:%d,   P4:%d,   P5:%d,   P6:%d,   P7:%d\n",
-                  gpio.P0, gpio.P1, gpio.P2, gpio.P3, gpio.P4, gpio.P5, gpio.P6, gpio.P7);
+                  "P0:%d,   P1:%d,    P2:%d,    P3:%d,    P4:%d,    P5:%d,    P6:%d,    P7:%d\n",
+                  state.P0, state.P1, state.P2, state.P3, state.P4, state.P5, state.P6, state.P7);
     
-    // 设置状态
-    gpio.P5 = true;
-    ArduinoPCF8574::write(ArduinoPCF8574::J32, gpio);
+    // 设置
+    state.P5 = true;
+    ArduinoPCF8574::write(ArduinoPCF8574::J32, state);
+}
+
+void onTest2() {
+    // 读取
+    auto pcf8574_32    = ArduinoPCF8574(ArduinoPCF8574::J32);
+    auto pcf8574_state = pcf8574_32.read();
+
+    // 设置
+    pcf8574_state.P4 = true;
+    pcf8574_32.write(pcf8574_state);
 }
 ```
 
