@@ -55,26 +55,27 @@ uint8_t ArduinoPCF8574::write(unsigned short value) {
 
 ArduinoPCF8574::State ArduinoPCF8574::State::from(unsigned short value) {
     auto gpio = ArduinoPCF8574::State();
-    gpio.P0 = (value & 0x01) == 1;
-    gpio.P1 = ((value >> 1) & 0x01) == 1;
-    gpio.P2 = ((value >> 2) & 0x01) == 1;
-    gpio.P3 = ((value >> 3) & 0x01) == 1;
-    gpio.P4 = ((value >> 4) & 0x01) == 1;
-    gpio.P5 = ((value >> 5) & 0x01) == 1;
-    gpio.P6 = ((value >> 6) & 0x01) == 1;
-    gpio.P7 = ((value >> 7) & 0x01) == 1;
+    gpio.P0 = bitRead(value, 0) == 1;
+    gpio.P1 = bitRead(value, 1) == 1;
+    gpio.P2 = bitRead(value, 2) == 1;
+    gpio.P3 = bitRead(value, 3) == 1;
+    gpio.P4 = bitRead(value, 4) == 1;
+    gpio.P5 = bitRead(value, 5) == 1;
+    gpio.P6 = bitRead(value, 6) == 1;
+    gpio.P7 = bitRead(value, 7) == 1;
     return gpio;
 }
 
 unsigned short ArduinoPCF8574::State::toValue(ArduinoPCF8574::State state) {
-    unsigned short value = state.P7 ? 1 : 0;
-    value = (value << 1) + (state.P6 ? 1 : 0);
-    value = (value << 1) + (state.P5 ? 1 : 0);
-    value = (value << 1) + (state.P4 ? 1 : 0);
-    value = (value << 1) + (state.P3 ? 1 : 0);
-    value = (value << 1) + (state.P2 ? 1 : 0);
-    value = (value << 1) + (state.P1 ? 1 : 0);
-    value = (value << 1) + (state.P0 ? 1 : 0);
+    unsigned short value = 0;
+    bitWrite(value, 7, state.P7 ? 1 : 0);
+    bitWrite(value, 6, state.P6 ? 1 : 0);
+    bitWrite(value, 5, state.P5 ? 1 : 0);
+    bitWrite(value, 4, state.P4 ? 1 : 0);
+    bitWrite(value, 3, state.P3 ? 1 : 0);
+    bitWrite(value, 2, state.P2 ? 1 : 0);
+    bitWrite(value, 1, state.P1 ? 1 : 0);
+    bitWrite(value, 0, state.P0 ? 1 : 0);
     return value;
 }
 
@@ -94,7 +95,7 @@ String ArduinoPCF8574::State::toString() const {
            "P7=" + this->P7;
 }
 
-bool ArduinoPCF8574::State::operator[](const PIN& pin) const {
+bool ArduinoPCF8574::State::operator[](const PIN &pin) const {
     switch (pin) {
         case PIN::P0:
             return this->P0;
@@ -117,7 +118,7 @@ bool ArduinoPCF8574::State::operator[](const PIN& pin) const {
     }
 }
 
-ArduinoPCF8574::State ArduinoPCF8574::State::set(const PIN& pin, bool value) {
+ArduinoPCF8574::State ArduinoPCF8574::State::set(const PIN &pin, bool value) {
     switch (pin) {
         case PIN::P0:
             this->P0 = value;
